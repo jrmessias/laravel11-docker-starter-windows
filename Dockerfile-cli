@@ -1,0 +1,10 @@
+FROM serversideup/php:8.4-cli
+
+# Switch to root so we can do root things
+USER root
+
+# Install additional extension with root permissions
+RUN install-php-extensions bcmath
+
+# Drop back to our unprivileged user
+USER www-data
