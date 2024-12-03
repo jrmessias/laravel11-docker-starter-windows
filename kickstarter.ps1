@@ -21,6 +21,15 @@ Copy-Item docker-compose.local.yml.example docker-compose.local.yml
 # Replace the {appname} placeholder with the name from cli argument
 (Get-Content docker-compose.local.yml.example) -replace "{appname}", "$args" | Out-File -encoding ASCII docker-compose.local.yml
 
+# Create files to connect each server
+New-Item -ItemType "directory" -Path "./docker/bash"
+New-Item -Path ./docker/bash -Name "connect-webserver.ps1" -ItemType "file" -Value "docker exec -ti $($args)_webserver /bin/bash"
+New-Item -Path ./docker/bash -Name "connect-task.ps1" -ItemType "file" -Value "docker exec -ti $($args)_task /bin/bash"
+New-Item -Path ./docker/bash -Name "connect-queue.ps1" -ItemType "file" -Value "docker exec -ti $($args)_queue /bin/bash"
+New-Item -Path ./docker/bash -Name "connect-redis.ps1" -ItemType "file" -Value "docker exec -ti $($args)_redis /bin/bash"
+New-Item -Path ./docker/bash -Name "connect-db.ps1" -ItemType "file" -Value "docker exec -ti $($args)_db /bin/bash"
+New-Item -Path ./docker/bash -Name "docker-compose-build.ps1" -ItemType "file" -Value "docker-compose up -d --build"
+
 # Download Laravel
 $path = Get-Location
 docker run -it -v $path`:/var/www/html serversideup/php:8.4-cli composer create-project laravel/laravel laravel
